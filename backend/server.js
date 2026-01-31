@@ -69,6 +69,19 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/webhooks', webhookRoutes);
 
+// Serve static files from React frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  
+  // Serve the React build files
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+}
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -94,8 +107,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 Handler
-app.use((req, res) => {
+// 404 Handler for API routes only
+app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
@@ -135,22 +148,6 @@ io.on('connection', (socket) => {
 
 // Make io accessible in routes
 app.set('io', io);
-
-// Serve static files from React frontend in production
-if (process.env.NODE_ENV === 'production') {
-  const path = require('path');
-  
-  // Serve the React build files
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
-  // Serve static files from public folder
-  app.use(express.static(path.join(__dirname, '../frontend/public')));
-  
-  // Handle React routing, return all requests to React app
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-  });
-}
 
 // Database Connection
 const connectDB = async () => {
