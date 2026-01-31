@@ -1,0 +1,20 @@
+{
+  "name": "tenantflow-crm",
+  "version": "1.0.0",
+  "description": "Innovative Multi-Tenant CRM with AI-powered insights and white-label capabilities",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": ["multi-tenant", "crm", "saas", "white-label", "ai"],
+  "author": "TenantFlow Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
